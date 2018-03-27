@@ -125,6 +125,38 @@ public class ClientConnectionHandler extends Thread
 
     public void handleUPLOAD(String _message)
     {
+        //Find the filename by removing the command and separating from the file contents
+        int filenameStartIndex = _message.indexOf(" ") + 1;
+        int filenameEndIndex = _message.indexOf("\\n");
+        String fileName = _message.substring(filenameStartIndex, filenameEndIndex);
+
+        //Get the file contents by grabbing everything passed the first new line
+        String fileContents = _message.substring(filenameEndIndex + 2);
+
+        //Find the file
+        File file = new File(SHARED_FOLDER + fileName);
+
+        //Write to the file
+        try
+        {
+            //If the file doesn't exist, create it
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
+
+            //Write to the file
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(fileContents);
+
+            //Close the file writer
+            fileWriter.close();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Could not create or update the file [" + file.getName() + "] the UPLOAD command!");
+            e.printStackTrace();
+        }
     }
 
     public void handleDOWNLOAD(String _message)
