@@ -25,9 +25,12 @@ public class FileServer
     {
         try
         {
+            //Set up the server socket and threads
             serverSocket = new ServerSocket(SERVER_PORT);
             threads = new ClientConnectionHandler[MAX_CLIENTS];
+            System.out.println("Server started successfully ... ");
 
+            //Handle incoming requests
             while (true)
             {
                 clientSocket = serverSocket.accept();

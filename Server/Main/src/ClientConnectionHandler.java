@@ -3,6 +3,11 @@ import java.net.Socket;
 
 public class ClientConnectionHandler extends Thread
 {
+    //--- Static Variables ---//
+    private static final String SHARED_FOLDER = "./Main/SharedFolder/";
+
+
+
     //--- Private Variables ---//
     private Socket clientSocket = null;
     private PrintWriter out = null;
@@ -80,11 +85,13 @@ public class ClientConnectionHandler extends Thread
 
     public void handleDIR()
     {
+        System.out.println("HANDLING DIR");
+
         //The message to be sent back to the client
         String returnMsg = "";
 
         //Grab the shared folder
-        File sharedFolder = new File("SharedFolder");
+        File sharedFolder = new File(SHARED_FOLDER);
 
         //Get the list of all of the files in the shared folder
         String[] files = sharedFolder.list();
