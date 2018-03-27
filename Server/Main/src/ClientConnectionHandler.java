@@ -1,3 +1,6 @@
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+import sun.awt.dnd.SunDropTargetEvent;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -27,7 +30,7 @@ public class ClientConnectionHandler extends Thread
         //Establish the input / output connection
         try
         {
-            out = new PrintWriter(clientSocket.getOutputStream());
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         }
         catch (IOException e)
@@ -55,6 +58,8 @@ public class ClientConnectionHandler extends Thread
                 //If there was actually a message, handle the command
                 if (msg != null)
                 {
+                    System.out.println(msg);
+
                     //Handle the message type
                     if (msg.contains("DIR"))
                         handleDIR();
@@ -85,8 +90,6 @@ public class ClientConnectionHandler extends Thread
 
     public void handleDIR()
     {
-        System.out.println("HANDLING DIR");
-
         //The message to be sent back to the client
         String returnMsg = "";
 
