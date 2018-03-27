@@ -3,6 +3,7 @@ import sun.awt.dnd.SunDropTargetEvent;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class ClientConnectionHandler extends Thread
 {
@@ -161,7 +162,43 @@ public class ClientConnectionHandler extends Thread
 
     public void handleDOWNLOAD(String _message)
     {
+        //Find the index of the end of the command. Everything else is the file name
+        int commandEnd = _message.indexOf(' ');
 
+        //Extract the file name
+        String fileName = _message.substring(commandEnd + 1);
+
+        //Open the file
+        File file = new File(SHARED_FOLDER + fileName);
+
+        try
+        {
+            //If the file doesn't exist, return INVALID to the client. Otherwise, return its contents
+            if (!file.exists())
+            {
+                sendMessage("INVALID");
+            }
+            else
+            {
+                //Create a scanner to read the file
+                Scanner scanner = new Scanner(file);
+                String fileContents = "";
+
+                //Read the file contents and store it as a single string
+                while(scanner.hasNextLine())
+                {
+                    fileContents += (scanner.nextLine() + "\n");
+                }
+
+                //Send the file contents to the client
+                sendMessage(fileContents);
+            }
+        }
+        catch (IOException e)
+        {
+            System.err.println("Exception while trying to DOWNLOAD [" + fileName + "]! Terminating connection!");
+            e.printStackTrace();
+        }
     }
 
     public void sendMessage(String _message)
