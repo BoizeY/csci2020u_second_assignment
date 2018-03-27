@@ -28,10 +28,7 @@ public class Controller {
 
 
     public void initialize() {
-      // getDir();
-
-        
-
+        getDir();
     }
 
     @FXML protected void upload(ActionEvent event) {
