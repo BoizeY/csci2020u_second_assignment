@@ -96,12 +96,59 @@ public class Controller {
     protected void download(ActionEvent event) {
         System.out.println("downloaded");
 
+        //requested file
+        String fileContents = "";
+
+        //get the selected file name
+        String selectedServerFileName = serverFileList.getSelectionModel().getSelectedItems().get(0).toString();
+
+
         try {
+            //open socket
             socket = new Socket("127.0.0.1", 8080);
+            clientOut = new PrintWriter(socket.getOutputStream(), true);
+            clientIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            //sent download request
+            clientOut.println("DOWNLOAD " + selectedServerFileName);
+
+            //read in input
+            fileContents = clientIn.readLine();
+
+            //close socket
+            socket.close();
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        //try to find if there is already a local copy
+        File file = new File(LOCALFOLDER + selectedServerFileName);
+
+        //copying to local
+        try
+        {
+            //create the requested file is it doesn't exist locally
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
+
+            //write to the file
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(fileContents);
+
+            //close file writer
+            fileWriter.close();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Could not create or update the file [" + file.getName() + "] the UPLOAD command!");
+            e.printStackTrace();
+        }
+        getLocalDir();
 
     }
 
@@ -128,6 +175,7 @@ public class Controller {
             }
             // if there is file in the server pull and update list
             else {
+
                 //clear current list
                 serverDirList.clear();
 
@@ -162,6 +210,9 @@ public class Controller {
 
         //if there is files populate the list
         else {
+
+            //clear current list
+            localDirList.clear();
 
             String[] localFiles = localFolder.list();
 
