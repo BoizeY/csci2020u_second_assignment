@@ -15,7 +15,8 @@ import javafx.scene.control.*;
 public class Controller {
 
     // Static variable
-    private static final String LOCALFOLDER = "./src/LocalFolder/";
+    public static String COMPUTERNAME = "";
+    public static String LOCALFOLDER = "";
 
     // private variables
     private Socket socket = null;
