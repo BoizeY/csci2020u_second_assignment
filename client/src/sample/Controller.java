@@ -63,9 +63,11 @@ public class Controller {
 
                 //store selected file content into a string;
                 while (scanner.hasNextLine()) {
-                    outPutContents += (scanner.nextLine() + "\n");
+                    outPutContents += (scanner.nextLine() + "/n");
                 }
 
+                //Remove the final new line that was added at the end of the loop
+                outPutContents = outPutContents.substring(0, outPutContents.length() - 2);
             }
         }
         catch (IOException e) {
@@ -82,7 +84,7 @@ public class Controller {
 
             //System.out.println("UPLOAD " + selectedFileName + "\n" + outPutContents);
             //sent out command and file content
-            clientOut.println("UPLOAD " + selectedFileName + "\\n" + outPutContents);
+            clientOut.println("UPLOAD " + selectedFileName + "/n" + outPutContents);
 
             socket.close();
         }
@@ -136,9 +138,14 @@ public class Controller {
                 file.createNewFile();
             }
 
+            //Split the file data into the individual lines
+            String[] fileLines = fileContents.split("/n");
+
             //write to the file
             FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(fileContents);
+
+            for (int i = 0; i < fileLines.length; i++)
+                fileWriter.write(fileLines[i] + "\n");
 
             //close file writer
             fileWriter.close();

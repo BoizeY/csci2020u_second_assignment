@@ -34,7 +34,6 @@ public class FileServer
             while (true)
             {
                 clientSocket = serverSocket.accept();
-                System.out.println("Client #"+(numClients+1)+" connected.");
                 threads[numClients] = new ClientConnectionHandler(clientSocket);
                 threads[numClients].start();
                 numClients++;

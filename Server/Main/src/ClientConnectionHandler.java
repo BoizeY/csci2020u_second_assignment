@@ -3,6 +3,7 @@ import sun.awt.dnd.SunDropTargetEvent;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 import java.util.Scanner;
 
 public class ClientConnectionHandler extends Thread
@@ -128,11 +129,14 @@ public class ClientConnectionHandler extends Thread
     {
         //Find the filename by removing the command and separating from the file contents
         int filenameStartIndex = _message.indexOf(" ") + 1;
-        int filenameEndIndex = _message.indexOf("\\n");
+        int filenameEndIndex = _message.indexOf("/n");
         String fileName = _message.substring(filenameStartIndex, filenameEndIndex);
 
         //Get the file contents by grabbing everything passed the first new line
         String fileContents = _message.substring(filenameEndIndex + 2);
+
+        //Split the file contents into the individual lines
+        String[] fileLines = fileContents.split("/n");
 
         //Find the file
         File file = new File(SHARED_FOLDER + fileName);
@@ -146,9 +150,14 @@ public class ClientConnectionHandler extends Thread
                 file.createNewFile();
             }
 
-            //Write to the file
+            //Create the file writer
             FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(fileContents);
+
+            //Output each of the individual lines
+            for (int i = 0; i < fileLines.length; i++)
+            {
+                fileWriter.write(fileLines[i] + "\n");
+            }
 
             //Close the file writer
             fileWriter.close();
@@ -187,8 +196,11 @@ public class ClientConnectionHandler extends Thread
                 //Read the file contents and store it as a single string
                 while(scanner.hasNextLine())
                 {
-                    fileContents += (scanner.nextLine() + "\n");
+                    fileContents += (scanner.nextLine() + "/n");
                 }
+
+                //Remove the final new line that was added at the end of the above loop
+                fileContents = fileContents.substring(0, fileContents.length() - 2);
 
                 //Send the file contents to the client
                 sendMessage(fileContents);
