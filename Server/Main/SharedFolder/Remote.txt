@@ -1,3 +1,2 @@
-Hello World
-This should be line 2!
-Is there a line 3?
+HELLO WORLD
+This is a test
