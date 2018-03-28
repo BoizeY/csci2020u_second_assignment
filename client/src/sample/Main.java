@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class Main extends Application {
 
     @Override
@@ -22,48 +24,23 @@ public class Main extends Application {
     public static void main(String[] args) {
 
         // if argument is less than 3, return error message and end program
-        if (args.length > 3) {
+        if (args.length == 2) {
 
-            Boolean isCN = false;
-            Boolean isFP = false;
+                Controller.COMPUTERNAME  = args[0];
+                Controller.LOCALFOLDER = args[1] + "/";
 
-            //parse through argument
-            for (int i = 0; i < args.length; i++) {
+                File file = new File(Controller.LOCALFOLDER);
 
-                // if -cn take the following inputs as computer name
-                if (args[i] == "-cn") {
-                    isCN = true;
-                    isFP = false;
-                    continue;
-
-                    // if -fp, take the following inputs as file path name
-                } else if (args[i] == "-fp") {
-                    isFP = true;
-                    isCN = false;
-                    continue;
+                //Check to see if file path is valid
+                if(!file.exists()){
+                    System.out.println("Filepath does not exist. \n");
+                    System.exit(0);
                 }
-
-                if (isCN) {
-
-                    Controller.COMPUTERNAME += args[i] + " ";
-
-                } else if (isFP) {
-
-                    Controller.LOCALFOLDER = args[i];
-
-                }
-
-                //if there is not -cn or -fp command return error message and end program
-                if(isCN == false && isFP == false){
-                    System.out.println("Invalid commands. Try -cn computerName -fp file/path/here/ \n");
-                    return;
-                }
-            }
 
         }
         else {
-            System.out.println("Argument too short. Try -cn computerName -fp file/path/here/ \n");
-            return;
+            System.out.println("Invalid command. Try \"computerName\"  \"file/path/here/\" \n");
+            System.exit(0);
         }
 
         launch(args);
