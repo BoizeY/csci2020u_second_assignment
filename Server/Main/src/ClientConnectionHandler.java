@@ -200,7 +200,8 @@ public class ClientConnectionHandler extends Thread
                 }
 
                 //Remove the final new line that was added at the end of the above loop
-                fileContents = fileContents.substring(0, fileContents.length() - 2);
+                if (!fileContents.equals(""))
+                    fileContents = fileContents.substring(0, fileContents.length() - 2);
 
                 //Send the file contents to the client
                 sendMessage(fileContents);
